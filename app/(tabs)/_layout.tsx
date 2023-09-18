@@ -20,34 +20,34 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-      }}>
+        tabBarActiveTintColor:
+          '#00262C' /* Colors[colorScheme ?? 'light'].tint, */,
+        headerShown: false,
+      }}
+    >
       <Tabs.Screen
-        name="index"
+        name="(index)" // Route to index.tsx
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
+          title: 'Home',
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="birthdays"
+        options={{
+          title: 'Birthdays',
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="birthday-cake" color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="addNew"
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Add New',
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="plus-circle" color={color} />
+          ),
         }}
       />
     </Tabs>

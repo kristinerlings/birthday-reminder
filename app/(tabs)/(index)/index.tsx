@@ -1,31 +1,37 @@
-import { Stack } from 'expo-router';
-import { StyleSheet, Pressable, ImageBackground } from 'react-native';
+import { Stack, Link, router } from 'expo-router';
+import { StyleSheet, Pressable, ImageBackground, Button } from 'react-native';
 import { Text, View } from '../../../components/Themed';
 
 export default function TabOneScreen() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Coffee' }} />
+      <Stack.Screen options={{ title: 'Birthday Reminder' }} />
       <ImageBackground
-        source={require('./../../assets/images/background.png')}
+        source={require('./../../../assets/images/background.png')}
         style={styles.container}
       >
         <View style={styles.buttonsContainer}>
           <Pressable
             style={styles.button}
-            onPress={() => console.log('Pressed!')}
+            onPress={() => router.push('../birthdays/index')}
           >
             <Text>Birthday List</Text>
           </Pressable>
+          {/*  <Button 
+            title="Add New"
+            onPress={() => {
+              router.push('/birthdays/addNew');
+            }}
+          /> */}
           <Pressable
             style={styles.button}
-            onPress={() => console.log('Pressed!')}
+            onPress={() => router.push('../../options/addNew')}
           >
             <Text>Add new</Text>
           </Pressable>
           <Pressable
             style={styles.button}
-            onPress={() => console.log('Pressed!')}
+            onPress={() => router.push('/birthdays/index')}
           >
             <Text>Edit list</Text>
           </Pressable>
