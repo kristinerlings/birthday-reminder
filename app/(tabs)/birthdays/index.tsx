@@ -4,9 +4,12 @@ import { StyleSheet } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import EditScreenInfo from '../../../components/EditScreenInfo';
 import { Text, View } from '../../../components/Themed';
-import { Stack } from 'expo-router';
+import { Stack, /* useRouter */ } from 'expo-router'; //useRouter -> access router from anywhere I pushed
 
 export default function Birthdays() {
+ /*  const router = useRouter(); */
+ /*  const { data } = router.params || {};  *///retrieve the data from the route params. if data is undefined, set it to empty object
+
   const dummyData = [{ name: 'Sarah Johnsson', date: '11nov' }];
 
   return (

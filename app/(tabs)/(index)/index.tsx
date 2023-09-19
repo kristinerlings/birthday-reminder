@@ -23,6 +23,7 @@ export default function TabOneScreen() {
               router.push('/birthdays/addNew');
             }}
           /> */}
+
           <Pressable
             style={styles.button}
             onPress={() => router.push('../../options/addNew')}

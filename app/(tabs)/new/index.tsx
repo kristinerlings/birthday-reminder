@@ -23,11 +23,17 @@ interface birthdayData {
 export default function AddNewBirthday() {
   const [inputName, setInputName] = React.useState('');
   const [inputMessage, setInputMessage] = React.useState('');
-/*   const [selectedDate, setSelectedDate] = React.useState(null); */
-const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
+  /*   const [selectedDate, setSelectedDate] = React.useState(null); */
+  const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
 
   /*  const inputRef = useRef(null); */
   const inputRef = useRef<TextInput>(null);
+
+  const resetInputFields = () => {
+    setInputName('');
+    setInputMessage('');
+    setSelectedDate(null);
+  };
 
   /*  const focusInput = () => {
     if (inputRef.current) {
@@ -91,33 +97,36 @@ const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
       }}  */}
         <DatePicker
           onDateSelect={(date: Date | null) => {
-            setSelectedDate( date ); // explicitly specify the type here
+            setSelectedDate(date); // explicitly specify the type here
           }}
         />
         <View style={styles.buttonsContainer}>
-          <Pressable
-            style={styles.button}
-            onPress={() =>
-              console.log('pressed')
-            } /* router.push({ pathname: './../(index)/index.tsx' })} */
-          >
-            <Text>Cancel</Text>
-          </Pressable>
-          <Pressable
-            style={styles.button}
-            onPress={async () => {
-              const birthdayData = {
-                name: inputName,
-                message: inputMessage,
-                date: selectedDate, // Replace selectedDate with the actual date you want to store
-              };
-              await storeData(
-                birthdayData
-              ); /* router.push('./(index)/index.tsx') */
-            }}
-          >
-            <Text>Save</Text>
-          </Pressable>
+          <View style={styles.button}>
+            <Button
+              title="Cancel"
+              onPress={() => {
+                router.push('/(tabs)/(index)');
+                resetInputFields();
+              }}
+            />
+          </View>
+          <View style={styles.button}>
+            <Button
+              title="Save"
+              onPress={async () => {
+                const birthdayData = {
+                  name: inputName,
+                  message: inputMessage,
+                  date: selectedDate, // Replace selectedDate with the actual date you want to store
+                };
+                await storeData(birthdayData);
+                const storedData = await getData();
+                console.log(storedData);
+                router.push('/(tabs)/birthdays'), { data: birthdayData }; //storedData
+                resetInputFields();
+              }}
+            />
+          </View>
         </View>
       </SafeAreaView>
     </>

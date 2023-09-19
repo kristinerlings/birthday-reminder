@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { View, Button, Text, StyleSheet } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-
 interface DatePickerProps {
   onDateSelect: (date: Date | null) => void;
 }
@@ -24,9 +23,9 @@ export default function DatePicker({ onDateSelect }: DatePickerProps) {
 
   const handleConfirm = (date: Date) => {
     /* setSelectedDate(date); */
-     if (selectedDate) {
-       onDateSelect(selectedDate);
-     }
+    if (selectedDate) {
+      onDateSelect(selectedDate);
+    }
     /*  hideDatePicker(); */
   };
 
@@ -37,8 +36,7 @@ export default function DatePicker({ onDateSelect }: DatePickerProps) {
 
   return (
     <View style={styles.container}>
-
-     {/*  <Button
+      {/*  <Button
         title="Show Date Picker"
         onPress={() => setDatePickerVisibility(true)}
       /> */}
@@ -74,8 +72,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  dateInput: {
-   
-   
-  },
+  dateInput: {},
 });
