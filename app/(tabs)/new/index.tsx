@@ -11,6 +11,7 @@ import {
 import { Stack, router } from 'expo-router';
 import DatePicker from '../../../components/DatePicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useBirthdayStore } from '../../../store/useBirthdayStore';
 
 /*SafeAreaView - automatically applies padding / view */
 //define typescript type for my object
@@ -25,6 +26,7 @@ export default function AddNewBirthday() {
   const [inputMessage, setInputMessage] = React.useState('');
   /*   const [selectedDate, setSelectedDate] = React.useState(null); */
   const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
+  const { setData } = useBirthdayStore(); // accesss the Zustand store
 
   /*  const inputRef = useRef(null); */
   const inputRef = useRef<TextInput>(null);
@@ -119,11 +121,14 @@ export default function AddNewBirthday() {
                   message: inputMessage,
                   date: selectedDate, // Replace selectedDate with the actual date you want to store
                 };
-                await storeData(birthdayData);
-                const storedData = await getData();
-                console.log(storedData);
-                router.push('/(tabs)/birthdays'), { data: birthdayData }; //storedData
-                resetInputFields();
+                
+          await storeData(birthdayData);
+
+          // Store the birthday data in Zustand
+          setData([...useBirthdayStore.getState().data, birthdayData]);
+
+          router.push('/(tabs)/birthdays');
+          resetInputFields();
               }}
             />
           </View>

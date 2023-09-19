@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { View, Button, Text, StyleSheet } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useBirthdayStore } from '../store/useBirthdayStore'; //Zustand
+
 
 interface DatePickerProps {
   onDateSelect: (date: Date | null) => void;

@@ -10,13 +10,18 @@ interface BirthdayData {
   date: Date | null;
 }
 
-type BirthdayStore = {
+/* type BirthdayStore = {
   data: BirthdayData[]; 
   setData: (data: BirthdayData[]) => void;
-};
+}; */
+
+type BirthdayStore = {
+  data: BirthdayData[];
+  setData: (data: BirthdayData[]) => void;
+}
 
 //responsible for managing the birthday data
 export const useBirthdayStore = create<BirthdayStore>((set) => ({
   data: [], // Initialize the array as empty
-  setData: (data: BirthdayData[]) => set({ data }),
+  setData: (data) => set({ data }),
 }));

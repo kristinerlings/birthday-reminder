@@ -2,13 +2,13 @@
 //npx expo install @react-native-async-storage/async-storage
 import { StyleSheet } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
-import EditScreenInfo from '../../../components/EditScreenInfo';
 import { Text, View } from '../../../components/Themed';
-import { Stack, /* useRouter */ } from 'expo-router'; //useRouter -> access router from anywhere I pushed
+import { Stack /* useRouter */ } from 'expo-router'; //useRouter -> access router from anywhere I pushed
+import { useBirthdayStore } from '../../../store/useBirthdayStore';
 
 export default function Birthdays() {
- /*  const router = useRouter(); */
- /*  const { data } = router.params || {};  *///retrieve the data from the route params. if data is undefined, set it to empty object
+  /*  const router = useRouter(); */
+  const { data/* , selectedDate */ } = useBirthdayStore(); // Access both data and selectedDate
 
   const dummyData = [{ name: 'Sarah Johnsson', date: '11nov' }];
 
@@ -16,11 +16,12 @@ export default function Birthdays() {
     <>
       <Stack.Screen options={{ title: 'Birthdays' }} />
       <FlashList
-        data={dummyData}
+        data={data}
         renderItem={({ item }) => (
           <View>
             <Text>{item.name}</Text>
-            <Text>{item.date}</Text>
+            <Text>{item.message}</Text>
+            <Text>{item.date?.getDay()}</Text>
           </View>
         )}
         estimatedItemSize={50}
