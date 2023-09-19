@@ -4,7 +4,12 @@ import React, { useState } from 'react';
 import { View, Button, Text, StyleSheet } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-export default function DatePicker() {
+
+interface DatePickerProps {
+  onDateSelect: (date: Date | null) => void;
+}
+
+export default function DatePicker({ onDateSelect }: DatePickerProps) {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   /*    const {isInputFocused, setInputFocused} = useState(false); */
@@ -18,7 +23,10 @@ export default function DatePicker() {
     }; */
 
   const handleConfirm = (date: Date) => {
-    setSelectedDate(date);
+    /* setSelectedDate(date); */
+     if (selectedDate) {
+       onDateSelect(selectedDate);
+     }
     /*  hideDatePicker(); */
   };
 

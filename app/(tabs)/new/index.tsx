@@ -9,12 +9,25 @@ import {
   StyleSheet,
 } from 'react-native';
 import { Stack, router } from 'expo-router';
-import DatePicker from '../../components/DatePicker';
+import DatePicker from '../../../components/DatePicker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 /*SafeAreaView - automatically applies padding / view */
+//define typescript type for my object
+interface birthdayData {
+  name: string;
+  message: string;
+  date: Date | null;
+}
 
 export default function AddNewBirthday() {
-  const [textInput, setTextInput] = React.useState('');
-  const inputRef = useRef(null);
+  const [inputName, setInputName] = React.useState('');
+  const [inputMessage, setInputMessage] = React.useState('');
+/*   const [selectedDate, setSelectedDate] = React.useState(null); */
+const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
+
+  /*  const inputRef = useRef(null); */
+  const inputRef = useRef<TextInput>(null);
 
   /*  const focusInput = () => {
     if (inputRef.current) {
@@ -22,9 +35,27 @@ export default function AddNewBirthday() {
     }
   }; */
 
+  const storeData = async (value: birthdayData) => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem('my-key', jsonValue);
+    } catch (e) {
+      // saving error
+    }
+  };
+
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('my-key');
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      // error reading value
+    }
+  };
+
   return (
     <>
-      <Stack.Screen options={{ title: 'Add New Birthday' }} />
+      <Stack.Screen options={{ title: 'New Birthday' }} />
       <SafeAreaView>
         <Text>New Birthday</Text>
         <View>
@@ -35,8 +66,8 @@ export default function AddNewBirthday() {
             style={styles.inputField}
             numberOfLines={1}
             maxLength={40}
-            onChangeText={(input) => setTextInput(input)}
-            value={textInput}
+            onChangeText={(input) => setInputName(input)}
+            value={inputName}
             placeholder="Name"
           />
         </View>
@@ -48,8 +79,8 @@ export default function AddNewBirthday() {
             numberOfLines={3}
             maxLength={40}
             style={styles.textarea}
-            onChangeText={(input) => setTextInput(input)}
-            value={textInput}
+            onChangeText={(input) => setInputMessage(input)}
+            value={inputMessage}
             placeholder="Buy a present, send flowers, call, etc. "
           />
         </View>
@@ -58,23 +89,32 @@ export default function AddNewBirthday() {
               router.push('');
             }
       }}  */}
-        <DatePicker />
+        <DatePicker
+          onDateSelect={(date: Date | null) => {
+            setSelectedDate( date ); // explicitly specify the type here
+          }}
+        />
         <View style={styles.buttonsContainer}>
           <Pressable
             style={styles.button}
-            onPress={
-              () =>
-                console.log('pressed') /* router.push('./(index)/index.tsx') */
-            }
+            onPress={() =>
+              console.log('pressed')
+            } /* router.push({ pathname: './../(index)/index.tsx' })} */
           >
             <Text>Cancel</Text>
           </Pressable>
           <Pressable
             style={styles.button}
-            onPress={
-              () =>
-                console.log('pressed') /* router.push('./(index)/index.tsx') */
-            }
+            onPress={async () => {
+              const birthdayData = {
+                name: inputName,
+                message: inputMessage,
+                date: selectedDate, // Replace selectedDate with the actual date you want to store
+              };
+              await storeData(
+                birthdayData
+              ); /* router.push('./(index)/index.tsx') */
+            }}
           >
             <Text>Save</Text>
           </Pressable>

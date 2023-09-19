@@ -1,3 +1,5 @@
+// https://docs.expo.dev/versions/latest/sdk/async-storage/
+//npx expo install @react-native-async-storage/async-storage
 import { StyleSheet } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import EditScreenInfo from '../../../components/EditScreenInfo';
