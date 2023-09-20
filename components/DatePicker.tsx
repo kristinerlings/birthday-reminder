@@ -44,7 +44,7 @@ export default function DatePicker({ onDateSelect }: DatePickerProps) {
       /> */}
       {isDatePickerVisible && (
         <View style={styles.dateInput}>
-          <Text>Date of Birth</Text>
+         {/*  <Text style={styles.title}>Date of Birth</Text> */}
           <DateTimePicker
             value={selectedDate || new Date()}  
             mode="date"
@@ -59,7 +59,7 @@ export default function DatePicker({ onDateSelect }: DatePickerProps) {
       )}
       {selectedDate && (
         <View>
-          <Text>
+          <Text style={styles.title}>
             Date of birth {selectedDate.getDate()}/{selectedDate.getMonth() + 1}
             /{selectedDate.getFullYear()}
           </Text>
@@ -68,6 +68,11 @@ export default function DatePicker({ onDateSelect }: DatePickerProps) {
     </View>
   );
 }
+const colours = {
+  white: '#E4E4E4',
+  yellow: '#FFD45A',
+};
+
 
 const styles = StyleSheet.create({
   container: {
@@ -75,4 +80,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   dateInput: {},
+  title: {
+    color: colours.yellow,
+    marginTop: 5,
+    alignSelf: 'flex-start',
+  },
 });
