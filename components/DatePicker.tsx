@@ -46,7 +46,7 @@ export default function DatePicker({ onDateSelect }: DatePickerProps) {
         <View style={styles.dateInput}>
           <Text>Date of Birth</Text>
           <DateTimePicker
-            value={selectedDate || new Date()} // Provide the initial value here
+            value={selectedDate || new Date()}  
             mode="date"
             display="spinner" //default, spinner, compact, inline
             onChange={(event, date) => {

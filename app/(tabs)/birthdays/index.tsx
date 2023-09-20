@@ -8,40 +8,76 @@ import { useBirthdayStore } from '../../../store/useBirthdayStore';
 
 export default function Birthdays() {
   /*  const router = useRouter(); */
-  const { data/* , selectedDate */ } = useBirthdayStore(); // Access both data and selectedDate
+  const { data /* , selectedDate */ } = useBirthdayStore(); // Access both data and selectedDate
 
   const dummyData = [{ name: 'Sarah Johnsson', date: '11nov' }];
 
   return (
     <>
       <Stack.Screen options={{ title: 'Birthdays' }} />
-      <FlashList
-        data={data}
-        renderItem={({ item }) => (
-          <View>
-            <Text>{item.name}</Text>
-            <Text>{item.message}</Text>
-            <Text>{item.date?.getDay()}</Text>
-          </View>
-        )}
-        estimatedItemSize={50}
-      />
+      <View style={styles.pageContainer}>
+        <FlashList
+          data={data}
+          renderItem={({ item }) => (
+            <View style={styles.container}>
+              <View style={styles.dataContainer}>
+                <Text style={styles.name}>{item.name}</Text>
+                <Text style={styles.message}>{item.message}</Text>
+              </View>
+              <View style={styles.dataContainer}>
+                <Text style={styles.date}>DummyData</Text>
+              </View>
+            </View>
+          )}
+          estimatedItemSize={50}
+        />
+      </View>
     </>
   );
 }
+const colours = {
+  white: '#E4E4E4',
+  grey: '#B7B7B7',
+  lightBlue: '#D1E2E2',
+  darkBlue: '#00262C',
+  darkBlueTransp: 'rgba(0, 38, 44, 0.8)',
+  yellow: '#FFD45A',
+};
 
 const styles = StyleSheet.create({
+  pageContainer: {
+    backgroundColor: colours.darkBlue,
+    flex: 1,
+  },
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    backgroundColor: 'transparent',
+    margin: 30,
+  },
+  dataContainer: {
+    backgroundColor: 'transparent',
+    marginVertical: 5,
+  },
+  name: {
+    color: colours.white,
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  message: {
+    color: colours.white,
+  },
+  date: {
+    color: colours.yellow,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
   },
   separator: {
-    marginVertical: 30,
+   /*  marginVertical: 30, */
     height: 1,
     width: '80%',
   },

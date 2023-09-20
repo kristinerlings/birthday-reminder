@@ -2,7 +2,7 @@
 is used both to add new data item (when no data for given key exists), 
 and to modify existing item (when previous data for given key exists).*/
 
-import create from 'zustand';
+import { create } from 'zustand';
 
 interface BirthdayData {
   name: string;
@@ -10,15 +10,10 @@ interface BirthdayData {
   date: Date | null;
 }
 
-/* type BirthdayStore = {
-  data: BirthdayData[]; 
-  setData: (data: BirthdayData[]) => void;
-}; */
-
 type BirthdayStore = {
   data: BirthdayData[];
   setData: (data: BirthdayData[]) => void;
-}
+};
 
 //responsible for managing the birthday data
 export const useBirthdayStore = create<BirthdayStore>((set) => ({
