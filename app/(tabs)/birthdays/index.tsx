@@ -5,15 +5,18 @@ import { StyleSheet, Button } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { Text, View } from '../../../components/Themed';
 import { Stack /* useRouter */ } from 'expo-router'; //useRouter -> access router from anywhere I pushed
-import { useBirthdayStore } from '../../../store/useBirthdayStore'; // Zustand
+import {
+  useBirthdayStore,
+  BirthdayData,
+} from '../../../store/useBirthdayStore'; // Zustand
 import UpcomingAge from '../../../components/UpcomingAge';
 import React, { useState } from 'react';
 import { SwipeListView } from 'react-native-swipe-list-view';
-
+//SwipeListView = Is built on top of FlashList !
 
 export default function Birthdays() {
   /*  const router = useRouter(); */
-  const { data } = useBirthdayStore(); // Access data from zustand store
+  const { data, setData } = useBirthdayStore(); // Access data from zustand store
 
   const sortedData = [...data].sort((a, b) => {
     if (a.date && b.date) {
@@ -48,12 +51,64 @@ export default function Birthdays() {
 
   const [activeButton, setActiveButton] = useState('upcoming');
 
-    //swipe list view
-/*    const swipeHidden = (data, rowMap) => (
+  //swipe list view
+  /*    const swipeHidden = (data, rowMap) => (
     <View style={styles.rowBack}>
       <Text>Delete</Text>
     </View>
   ); */
+
+  //swipe list view starts here
+  const [lastOpenedRowKey, setLastOpenedRowKey] = useState<string | null>(null);
+
+  const closeLastOpenedRow = (rowMap: any) => {
+    if (lastOpenedRowKey && rowMap && rowMap[lastOpenedRowKey]) {
+      rowMap[lastOpenedRowKey].closeRow();
+      setLastOpenedRowKey(null);
+    }
+  };
+
+  const displayListBeforeSwipe = ({ item }: { item: BirthdayData }) => (
+    <View style={styles.containerWrapper}>
+      <View style={styles.container}>
+        <View style={styles.dataContainer}>
+          <Text style={styles.name}>{item.name}</Text>
+          <Text style={styles.message}>{item.message}</Text>
+        </View>
+        <View style={styles.dataContainer}>
+          <Text style={styles.date}>
+            {item.date
+              ? `${item.date.getDate()} ${item.date.toLocaleString('default', {
+                  month: 'short',
+                })}`
+              : ''}
+          </Text>
+          <UpcomingAge birthday={item.date} />
+        </View>
+      </View>
+    </View>
+  );
+
+  //rowMap = object with keys of row data, and values of ref to row hidden component
+  const displaySwipeHidden = (data: { item: BirthdayData }, rowMap: any) => (
+    /*  <View> */
+    <View style={styles.rowBack}>
+      <View style={styles.editContainer}>
+        <Text style={styles.edit}>Edit</Text>
+      </View>
+      <View style={styles.deleteContainer}>
+        <Text onPress={() => handleDelete(data.item)}>Delete</Text>
+      </View>
+    </View>
+    /* </View> */
+  );
+
+  const handleDelete = (itemToDelete: BirthdayData) => {
+    const updatedData = data.filter((item) => item !== itemToDelete);
+    setData(updatedData); // Using `setData` from `useBirthdayStore` to update the store
+  };
+
+  
 
   return (
     <>
@@ -62,64 +117,32 @@ export default function Birthdays() {
         {activeButton === 'upcoming' && (
           <>
             <Text>Upcoming Birthdays</Text>
-            <FlashList
+            <SwipeListView<BirthdayData>
               data={upcomingBirthdays}
-              renderItem={({ item }) => (
-                <View style={styles.container}>
-                  <View style={styles.dataContainer}>
-                    <Text style={styles.name}>{item.name}</Text>
-                    <Text style={styles.message}>{item.message}</Text>
-                  </View>
-                  <View style={styles.dataContainer}>
-                    <Text style={styles.date}>
-                      {/*  {item.date?.toLocaleDateString()} */}
-                      {/* {item.date?.toLocaleDateString(undefined, {day: 'numeric', month: 'short'})} */}
-                      {item.date
-                        ? `${item.date.getDate()} ${item.date.toLocaleString(
-                            'default',
-                            { month: 'short' }
-                          )}`
-                        : ''}
-                    </Text>
-                    <UpcomingAge birthday={item.date} />
-                  </View>
-                </View>
-              )}
-              estimatedItemSize={50}
+              renderItem={displayListBeforeSwipe}
+              renderHiddenItem={displaySwipeHidden}
+              // leftOpenValue={75}
+              rightOpenValue={-150}
+              /*  onRowDidOpen={(rowKey, rowMap) => {
+                closeLastOpenedRow(rowMap);
+                setLastOpenedRowKey(rowKey);
+              }} */
             />
           </>
         )}
         {activeButton === 'past' && (
           <>
             <Text>Past Birthdays</Text>
-            <FlashList
+            <SwipeListView
               data={pastBirthdays}
-              renderItem={({ item }) => (
-                <View style={styles.container}>
-                  <View style={styles.dataContainer}>
-                    <Text style={[styles.name, styles.pastBirthdays]}>
-                      {item.name}
-                    </Text>
-                    <Text style={[styles.message, styles.pastBirthdays]}>
-                      {item.message}
-                    </Text>
-                  </View>
-                  <View style={styles.dataContainer}>
-                    <Text style={[styles.date, { color: colours.grey }]}>
-                      {/*  {item.date?.toLocaleDateString()} */}
-                      {/* {item.date?.toLocaleDateString(undefined, {day: 'numeric', month: 'short'})} */}
-                      {item.date
-                        ? `${item.date.getDate()} ${item.date.toLocaleString(
-                            'default',
-                            { month: 'short' }
-                          )}`
-                        : ''}
-                    </Text>
-                    <UpcomingAge birthday={item.date} />
-                  </View>
-                </View>
-              )}
-              estimatedItemSize={50}
+              renderItem={displayListBeforeSwipe}
+              renderHiddenItem={displaySwipeHidden}
+              //leftOpenValue={75}
+              rightOpenValue={-150}
+              /*  onRowDidOpen={(rowKey, rowMap) => {
+                closeLastOpenedRow(rowMap);
+                setLastOpenedRowKey(rowKey);
+              }} */
             />
           </>
         )}
@@ -149,6 +172,10 @@ const colours = {
 
 const styles = StyleSheet.create({
   pageContainer: {
+    backgroundColor: colours.darkBlue,
+    flex: 1,
+  },
+  containerWrapper: {
     backgroundColor: colours.darkBlue,
     flex: 1,
   },
@@ -187,5 +214,31 @@ const styles = StyleSheet.create({
   },
   pastBirthdays: {
     color: colours.darkGrey,
+  },
+  rowBack: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingRight: 0,
+    backgroundColor: 'transparent', // For demonstration purposes
+  },
+  editContainer: {
+    backgroundColor: colours.yellow,
+    /* marginRight: 30, */
+    height: '100%',
+    padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  edit: {
+    textAlign: 'center',
+  },
+  deleteContainer: {
+    backgroundColor: 'red',
+    height: '100%',
+    padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
