@@ -52,91 +52,81 @@ export default function Birthdays() {
     <>
       <Stack.Screen options={{ title: 'Birthdays' }} />
       <View style={styles.pageContainer}>
-        <Button
-          /*  title={showUpcoming ? 'Upcoming Birthdays' : 'Past Birthdays'} */
-          title='Upcoming Birthdays'
-          color={
-            activeButton === 'upcoming' ? colours.yellow : colours.lightBlue
-          }
-          /*  onPress={() => setShowUpcoming(!showUpcoming)} */
-          onPress={() => setActiveButton('upcoming')}
-        />
-        <Button
-          /*  title={showUpcoming ? 'Upcoming Birthdays' : 'Past Birthdays'} */
-          title= 'Past Birthdays'
-          color={
-            activeButton === 'past' ? colours.yellow : colours.lightBlue
-          }
-          /*  onPress={() => setShowUpcoming(!showUpcoming)} */
-          onPress={() => setActiveButton('past')}
-        />
-        {/* {showUpcoming ? ( */}
         {activeButton === 'upcoming' && (
-        <>{/* <Text>Upcoming Birthdays</Text> */}
-        <FlashList
-          data={upcomingBirthdays}
-          renderItem={({ item }) => (
-            <View style={styles.container}>
-              <View style={styles.dataContainer}>
-                <Text style={styles.name}>{item.name}</Text>
-                <Text style={styles.message}>{item.message}</Text>
-              </View>
-              <View style={styles.dataContainer}>
-                <Text style={styles.date}>
-                  {/*  {item.date?.toLocaleDateString()} */}
-                  {/* {item.date?.toLocaleDateString(undefined, {day: 'numeric', month: 'short'})} */}
-                  {item.date
-                    ? `${item.date.getDate()} ${item.date.toLocaleString(
-                        'default',
-                        { month: 'short' }
-                      )}`
-                    : ''}
-                </Text>
-                <UpcomingAge birthday={item.date} />
-              </View>
-            </View>
-          )}
-          estimatedItemSize={50}
-        />
-        </>
+          <>
+            <Text>Upcoming Birthdays</Text>
+            <FlashList
+              data={upcomingBirthdays}
+              renderItem={({ item }) => (
+                <View style={styles.container}>
+                  <View style={styles.dataContainer}>
+                    <Text style={styles.name}>{item.name}</Text>
+                    <Text style={styles.message}>{item.message}</Text>
+                  </View>
+                  <View style={styles.dataContainer}>
+                    <Text style={styles.date}>
+                      {/*  {item.date?.toLocaleDateString()} */}
+                      {/* {item.date?.toLocaleDateString(undefined, {day: 'numeric', month: 'short'})} */}
+                      {item.date
+                        ? `${item.date.getDate()} ${item.date.toLocaleString(
+                            'default',
+                            { month: 'short' }
+                          )}`
+                        : ''}
+                    </Text>
+                    <UpcomingAge birthday={item.date} />
+                  </View>
+                </View>
+              )}
+              estimatedItemSize={50}
+            />
+          </>
         )}
-        {/*   ) : ( */}
         {activeButton === 'past' && (
-        <>
-          {/* <Text>Past Birthdays</Text> */}
-          <FlashList
-            data={pastBirthdays}
-            renderItem={({ item }) => (
-              <View style={styles.container}>
-                <View style={styles.dataContainer}>
-                  <Text style={[styles.name, styles.pastBirthdays]}>
-                    {item.name}
-                  </Text>
-                  <Text style={[styles.message, styles.pastBirthdays]}>
-                    {item.message}
-                  </Text>
+          <>
+            <Text>Past Birthdays</Text>
+            <FlashList
+              data={pastBirthdays}
+              renderItem={({ item }) => (
+                <View style={styles.container}>
+                  <View style={styles.dataContainer}>
+                    <Text style={[styles.name, styles.pastBirthdays]}>
+                      {item.name}
+                    </Text>
+                    <Text style={[styles.message, styles.pastBirthdays]}>
+                      {item.message}
+                    </Text>
+                  </View>
+                  <View style={styles.dataContainer}>
+                    <Text style={[styles.date, { color: colours.grey }]}>
+                      {/*  {item.date?.toLocaleDateString()} */}
+                      {/* {item.date?.toLocaleDateString(undefined, {day: 'numeric', month: 'short'})} */}
+                      {item.date
+                        ? `${item.date.getDate()} ${item.date.toLocaleString(
+                            'default',
+                            { month: 'short' }
+                          )}`
+                        : ''}
+                    </Text>
+                    <UpcomingAge birthday={item.date} />
+                  </View>
                 </View>
-                <View style={styles.dataContainer}>
-                  <Text style={[styles.date, { color: colours.grey }]}>
-                    {/*  {item.date?.toLocaleDateString()} */}
-                    {/* {item.date?.toLocaleDateString(undefined, {day: 'numeric', month: 'short'})} */}
-                    {item.date
-                      ? `${item.date.getDate()} ${item.date.toLocaleString(
-                          'default',
-                          { month: 'short' }
-                        )}`
-                      : ''}
-                  </Text>
-                  <UpcomingAge birthday={item.date} />
-                </View>
-              </View>
-            )}
-            estimatedItemSize={50}
-          />
-        </>
+              )}
+              estimatedItemSize={50}
+            />
+          </>
         )}
-        {/*     )} */}
       </View>
+      <Button
+        title="Upcoming Birthdays"
+        color={activeButton === 'upcoming' ? colours.yellow : colours.lightBlue}
+        onPress={() => setActiveButton('upcoming')}
+      />
+      <Button
+        title="Past Birthdays"
+        color={activeButton === 'past' ? colours.yellow : colours.lightBlue}
+        onPress={() => setActiveButton('past')}
+      />
     </>
   );
 }
