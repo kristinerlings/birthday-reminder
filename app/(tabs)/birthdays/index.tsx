@@ -1,11 +1,12 @@
 // https://docs.expo.dev/versions/latest/sdk/async-storage/
 //npx expo install @react-native-async-storage/async-storage
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Button } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { Text, View } from '../../../components/Themed';
 import { Stack /* useRouter */ } from 'expo-router'; //useRouter -> access router from anywhere I pushed
 import { useBirthdayStore } from '../../../store/useBirthdayStore'; // Zustand
 import UpcomingAge from '../../../components/UpcomingAge';
+import React, { useState } from 'react';
 
 export default function Birthdays() {
   /*  const router = useRouter(); */
@@ -42,66 +43,78 @@ export default function Birthdays() {
           birthday.date.getDate() > today.getDate()))
   );
 
+  const [showUpcoming, setShowUpcoming] = useState(true);
+
   return (
     <>
       <Stack.Screen options={{ title: 'Birthdays' }} />
       <View style={styles.pageContainer}>
         <Text>Upcoming Birthdays</Text>
-        <FlashList
-          data={upcomingBirthdays}
-          renderItem={({ item }) => (
-            <View style={styles.container}>
-              <View style={styles.dataContainer}>
-                <Text style={styles.name}>{item.name}</Text>
-                <Text style={styles.message}>{item.message}</Text>
-              </View>
-              <View style={styles.dataContainer}>
-                <Text style={styles.date}>
-                  {/*  {item.date?.toLocaleDateString()} */}
-                  {/* {item.date?.toLocaleDateString(undefined, {day: 'numeric', month: 'short'})} */}
-                  {item.date
-                    ? `${item.date.getDate()} ${item.date.toLocaleString(
-                        'default',
-                        { month: 'short' }
-                      )}`
-                    : ''}
-                </Text>
-                <UpcomingAge birthday={item.date} />
-              </View>
-            </View>
-          )}
-          estimatedItemSize={50}
+        <Button
+          title={showUpcoming ? 'Upcoming Birthdays' : 'Past Birthdays'}
+          onPress={() => setShowUpcoming(!showUpcoming)}
+          color={colours.lightBlue}
         />
-        <Text>Past Birthdays</Text>
-        <FlashList
-          data={pastBirthdays}
-          renderItem={({ item }) => (
-            <View style={styles.container}>
-              <View style={styles.dataContainer}>
-                <Text style={[styles.name, styles.pastBirthdays]}>
-                  {item.name}
-                </Text>
-                <Text style={[styles.message, styles.pastBirthdays]}>
-                  {item.message}
-                </Text>
+        { showUpcoming ? (
+          <FlashList
+            data={upcomingBirthdays}
+            renderItem={({ item }) => (
+              <View style={styles.container}>
+                <View style={styles.dataContainer}>
+                  <Text style={styles.name}>{item.name}</Text>
+                  <Text style={styles.message}>{item.message}</Text>
+                </View>
+                <View style={styles.dataContainer}>
+                  <Text style={styles.date}>
+                    {/*  {item.date?.toLocaleDateString()} */}
+                    {/* {item.date?.toLocaleDateString(undefined, {day: 'numeric', month: 'short'})} */}
+                    {item.date
+                      ? `${item.date.getDate()} ${item.date.toLocaleString(
+                          'default',
+                          { month: 'short' }
+                        )}`
+                      : ''}
+                  </Text>
+                  <UpcomingAge birthday={item.date} />
+                </View>
               </View>
-              <View style={styles.dataContainer}>
-                <Text style={[styles.date, { color: colours.grey }]}>
-                  {/*  {item.date?.toLocaleDateString()} */}
-                  {/* {item.date?.toLocaleDateString(undefined, {day: 'numeric', month: 'short'})} */}
-                  {item.date
-                    ? `${item.date.getDate()} ${item.date.toLocaleString(
-                        'default',
-                        { month: 'short' }
-                      )}`
-                    : ''}
-                </Text>
-                <UpcomingAge birthday={item.date} />
-              </View>
-            </View>
-          )}
-          estimatedItemSize={50}
-        />
+            )}
+            estimatedItemSize={50}
+          />
+        ) : (
+          <>
+            <Text>Past Birthdays</Text>
+            <FlashList
+              data={pastBirthdays}
+              renderItem={({ item }) => (
+                <View style={styles.container}>
+                  <View style={styles.dataContainer}>
+                    <Text style={[styles.name, styles.pastBirthdays]}>
+                      {item.name}
+                    </Text>
+                    <Text style={[styles.message, styles.pastBirthdays]}>
+                      {item.message}
+                    </Text>
+                  </View>
+                  <View style={styles.dataContainer}>
+                    <Text style={[styles.date, { color: colours.grey }]}>
+                      {/*  {item.date?.toLocaleDateString()} */}
+                      {/* {item.date?.toLocaleDateString(undefined, {day: 'numeric', month: 'short'})} */}
+                      {item.date
+                        ? `${item.date.getDate()} ${item.date.toLocaleString(
+                            'default',
+                            { month: 'short' }
+                          )}`
+                        : ''}
+                    </Text>
+                    <UpcomingAge birthday={item.date} />
+                  </View>
+                </View>
+              )}
+              estimatedItemSize={50}
+            />
+          </>
+        )}
       </View>
     </>
   );
