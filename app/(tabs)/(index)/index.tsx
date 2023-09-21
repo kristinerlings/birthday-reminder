@@ -1,8 +1,14 @@
 import { Stack, Link, router } from 'expo-router';
 import { StyleSheet, Pressable, ImageBackground, Button } from 'react-native';
 import { Text, View } from '../../../components/Themed';
+import { useBirthdayStore } from '../../../store/useBirthdayStore';
+import { useUpcomingBirthdays } from '../../../components/useUpcomingBirthdays'; // my custom hook
 
 export default function TabOneScreen() {
+  const { data } = useBirthdayStore();
+  const upcomingBirthdays = useUpcomingBirthdays();
+  const displayNextTwoBirthdays = upcomingBirthdays.slice(0, 2);
+
   return (
     <>
       <Stack.Screen options={{ title: 'Birthday Reminder' }} />
@@ -11,38 +17,23 @@ export default function TabOneScreen() {
         style={styles.container}
       >
         <View style={styles.buttonsContainer}>
-          <Pressable
-            style={styles.button}
-            onPress={() => router.push('../birthdays/index')}
-          >
-            <Text>Birthday List</Text>
-          </Pressable>
-          {/*  <Button 
-            title="Add New"
-            onPress={() => {
-              router.push('/birthdays/addNew');
-            }}
-          /> */}
-
-          <Pressable
-            style={styles.button}
-            onPress={() => router.push('../../options/addNew')}
-          >
-            <Text>Add new</Text>
-          </Pressable>
-          <Pressable
-            style={styles.button}
-            onPress={() => router.push('/birthdays/index')}
-          >
-            <Text>Edit list</Text>
-          </Pressable>
+          <Text> Dummy Text ! It is Sarah's birthday today!</Text>
         </View>
         <View style={styles.statusContainer}>
           <Text style={styles.statusTitle}>Upcoming Birthdays</Text>
-          <View style={styles.birthdayStatus}>
-            <Text style={styles.name}>Sarah Johnsson</Text>
-            <Text style={styles.date}>11nov</Text>
-          </View>
+          {displayNextTwoBirthdays.map((birthday, index) => (
+            <View style={styles.birthdayStatus}>
+              <Text style={styles.name}>{birthday.name}</Text>
+              <Text style={styles.date}>
+                {birthday.date
+                  ? `${birthday.date.getDate()} ${birthday.date.toLocaleString(
+                      'default',
+                      { month: 'short' }
+                    )}`
+                  : ''}
+              </Text>
+            </View>
+          ))}
         </View>
       </ImageBackground>
     </>
