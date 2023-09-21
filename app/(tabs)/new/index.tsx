@@ -15,6 +15,7 @@ import { Stack, router } from 'expo-router';
 import DatePicker from '../../../components/DatePicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useBirthdayStore } from '../../../store/useBirthdayStore';
+import PlatformTouchable from '../../../components/PlatformTouchable';
 
 /*SafeAreaView - automatically applies padding / view */
 //define typescript type for my object
@@ -43,9 +44,9 @@ export default function AddNewBirthday() {
   };
 
   const handleTapOutside = () => {
-   /*  if (Platform.OS !== 'web') { */
-      Keyboard.dismiss();
-   /*  } else {
+    /*  if (Platform.OS !== 'web') { */
+    Keyboard.dismiss();
+    /*  } else {
       undefined;
     } */
   };
@@ -85,11 +86,7 @@ export default function AddNewBirthday() {
     <>
       <Stack.Screen options={{ title: 'New Birthday' }} />
       <SafeAreaView style={styles.container}>
-        <TouchableWithoutFeedback
-          onPress={
-            /* Platform.OS !== 'web' ? this. */ handleTapOutside /* : undefined */
-          }
-        >
+        <PlatformTouchable onPress={handleTapOutside}>
           <View style={styles.wrapper}>
             {/*  <Text style={{ color: colours.lightBlue }}>New Birthday</Text> */}
             <View>
@@ -145,30 +142,19 @@ export default function AddNewBirthday() {
               <View style={styles.button}>
                 <Button
                   title="Save"
-                  onPress={async () => {
+                  onPress={() => {
                     const birthdayData = {
                       name: inputName,
                       message: inputMessage,
-                      date: selectedDate, // fix ..
+                      date: selectedDate, 
                     };
-                    //await storeData(birthdayData);
-
-                    // Store the birthday data in Zustandi
-                    /*  setData([
-                      ...useBirthdayStore.getState().data,
-                      birthdayData,
-                    ]); */
-
-                    /* addNewBirthday(birthdayData); */
-
                     // Add the new birthday to the store
                     setData([
                       ...useBirthdayStore.getState().data,
                       birthdayData,
                     ]);
                     console.log(birthdayData);
-
-                    console.log(birthdayData);
+                    
                     router.push('/(tabs)/birthdays');
                     resetInputFields();
                   }}
@@ -176,7 +162,7 @@ export default function AddNewBirthday() {
               </View>
             </View>
           </View>
-        </TouchableWithoutFeedback>
+        </PlatformTouchable>
       </SafeAreaView>
     </>
   );

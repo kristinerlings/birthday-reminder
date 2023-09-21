@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 
 type UpcomingAgeProps = {
   birthday: Date | null;
@@ -15,7 +15,11 @@ function UpcomingAge({ birthday }: UpcomingAgeProps) {
 
   if (!birthday) return null;
 
-  return <Text>Turns {calculateUpcomingAge(birthday)} this year</Text>;
+  return (
+    <Text style={{ color: '#ABABAB' }}>
+      {calculateUpcomingAge(birthday)}yrs this year
+    </Text>
+  );
 }
 
 export default UpcomingAge;

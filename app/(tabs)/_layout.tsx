@@ -31,6 +31,15 @@ export default function TabLayout() {
           title: 'Home',
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
         }}
+      /> 
+      <Tabs.Screen
+        name="new"
+        options={{
+          title: 'Add New',
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="plus-circle" color={color} />
+          ),
+        }}
       />
       <Tabs.Screen
         name="birthdays"
@@ -41,15 +50,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="new"
-        options={{
-          title: 'Add New',
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="plus-circle" color={color} />
-          ),
-        }}
-      />
+     
     </Tabs>
   );
 }
