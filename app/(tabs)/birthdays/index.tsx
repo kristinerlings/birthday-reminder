@@ -1,5 +1,6 @@
 // https://docs.expo.dev/versions/latest/sdk/async-storage/
 //npx expo install @react-native-async-storage/async-storage
+//https://www.npmjs.com/package/react-native-swipe-list-view
 import { StyleSheet, Button } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { Text, View } from '../../../components/Themed';
@@ -7,6 +8,8 @@ import { Stack /* useRouter */ } from 'expo-router'; //useRouter -> access route
 import { useBirthdayStore } from '../../../store/useBirthdayStore'; // Zustand
 import UpcomingAge from '../../../components/UpcomingAge';
 import React, { useState } from 'react';
+import { SwipeListView } from 'react-native-swipe-list-view';
+
 
 export default function Birthdays() {
   /*  const router = useRouter(); */
@@ -43,10 +46,14 @@ export default function Birthdays() {
           birthday.date.getDate() > today.getDate()))
   );
 
-  /*  const [showUpcoming, setShowUpcoming] = useState(true); */
-  // 'upcoming' or 'past' to represent the active view.
-
   const [activeButton, setActiveButton] = useState('upcoming');
+
+    //swipe list view
+/*    const swipeHidden = (data, rowMap) => (
+    <View style={styles.rowBack}>
+      <Text>Delete</Text>
+    </View>
+  ); */
 
   return (
     <>
