@@ -6,18 +6,33 @@ import { useUpcomingBirthdays } from '../../../components/useUpcomingBirthdays';
 
 export default function TabOneScreen() {
   const { data } = useBirthdayStore();
+  //upcoming bday
   const upcomingBirthdays = useUpcomingBirthdays();
   const displayNextTwoBirthdays = upcomingBirthdays.slice(0, 2);
 
+  //is birthday? - helper function 
+  const isTodayBirthday = () => {
+    const today = new Date();
+     return data.filter(
+       (birthday) =>
+         birthday.date &&
+         birthday.date.getDate() === today.getDate() &&
+         birthday.date.getMonth() === today.getMonth()
+     );
+  }
+
+  const birtdayDisplayIfToday = isTodayBirthday();
+
+
   return (
     <>
-      <Stack.Screen options={{ title: 'Birthday Reminder' }} />
+      <Stack.Screen options={{ title: 'Birthday Log' }} />
       <ImageBackground
         source={require('./../../../assets/images/background.png')}
         style={styles.container}
       >
         <View style={styles.buttonsContainer}>
-          <Text> Dummy Text ! It is Sarah's birthday today!</Text>
+          {birtdayDisplayIfToday.length > 0 ? ( <Text>It's {birtdayDisplayIfToday[0].name}'s birthday today!</Text>): <Text>Keep a track of your friends birhdays</Text>}
         </View>
         <View style={styles.statusContainer}>
           <Text style={styles.statusTitle}>Upcoming Birthdays</Text>
