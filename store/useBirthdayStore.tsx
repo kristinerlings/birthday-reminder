@@ -19,4 +19,11 @@ type BirthdayStore = {
 export const useBirthdayStore = create<BirthdayStore>((set) => ({
   data: [], // Initialize the array as empty
   setData: (data) => set({ data }),
+
+  //Add single birthday to my data array in the store, can now use the addBirthday function to add it to the store (add)
+ /*  addBirthday: (birthday: BirthdayData) => {
+    set((state) => ({
+      data: [...state.data, birthday],
+    }))
+  } */
 }));

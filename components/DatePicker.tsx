@@ -5,7 +5,6 @@ import { View, Button, Text, StyleSheet } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useBirthdayStore } from '../store/useBirthdayStore'; //Zustand
 
-
 interface DatePickerProps {
   onDateSelect: (date: Date | null) => void;
 }
@@ -24,10 +23,13 @@ export default function DatePicker({ onDateSelect }: DatePickerProps) {
     }; */
 
   const handleConfirm = (date: Date) => {
+    setSelectedDate(date); // Set the selected date in the component's state
+    onDateSelect(date); // Pass the selected date to the parent component
     /* setSelectedDate(date); */
-    if (selectedDate) {
+
+    /*  if (selectedDate) {
       onDateSelect(selectedDate);
-    }
+    } */
     /*  hideDatePicker(); */
   };
 
@@ -44,14 +46,15 @@ export default function DatePicker({ onDateSelect }: DatePickerProps) {
       /> */}
       {isDatePickerVisible && (
         <View style={styles.dateInput}>
-         {/*  <Text style={styles.title}>Date of Birth</Text> */}
+          {/*  <Text style={styles.title}>Date of Birth</Text> */}
           <DateTimePicker
-            value={selectedDate || new Date()}  
+            value={selectedDate || new Date()}
             mode="date"
             display="spinner" //default, spinner, compact, inline
             onChange={(event, date) => {
               if (date) {
                 handleConfirm(date);
+                /*  onDateSelect(date); */ // Pass the selected date to the parent component
               }
             }}
           />
@@ -72,7 +75,6 @@ const colours = {
   white: '#E4E4E4',
   yellow: '#FFD45A',
 };
-
 
 const styles = StyleSheet.create({
   container: {

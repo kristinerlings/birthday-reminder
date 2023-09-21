@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Text,
   View,
@@ -9,6 +9,7 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Keyboard,
+  Platform,
 } from 'react-native';
 import { Stack, router } from 'expo-router';
 import DatePicker from '../../../components/DatePicker';
@@ -28,6 +29,8 @@ export default function AddNewBirthday() {
   const [inputMessage, setInputMessage] = React.useState('');
   /*   const [selectedDate, setSelectedDate] = React.useState(null); */
   const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
+  /*   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date()); */
+
   const { setData } = useBirthdayStore(); // accesss the Zustand store
 
   /*  const inputRef = useRef(null); */
@@ -40,8 +43,19 @@ export default function AddNewBirthday() {
   };
 
   const handleTapOutside = () => {
-    Keyboard.dismiss();
+   /*  if (Platform.OS !== 'web') { */
+      Keyboard.dismiss();
+   /*  } else {
+      undefined;
+    } */
   };
+
+  //access selected data from onDateSelect callback from child/DatePicker component.
+  const handleDateSelect = (date: Date | null) => {
+    setSelectedDate(date);
+  };
+
+  //const { addBirthday } = useBirthdayStore();
 
   /*  const focusInput = () => {
     if (inputRef.current) {
@@ -71,7 +85,11 @@ export default function AddNewBirthday() {
     <>
       <Stack.Screen options={{ title: 'New Birthday' }} />
       <SafeAreaView style={styles.container}>
-        <TouchableWithoutFeedback onPress={handleTapOutside}>
+        <TouchableWithoutFeedback
+          onPress={
+            /* Platform.OS !== 'web' ? this. */ handleTapOutside /* : undefined */
+          }
+        >
           <View style={styles.wrapper}>
             {/*  <Text style={{ color: colours.lightBlue }}>New Birthday</Text> */}
             <View>
@@ -109,9 +127,10 @@ export default function AddNewBirthday() {
       }}  */}
             <Text style={styles.title}>Date of Birth</Text>
             <DatePicker
-              onDateSelect={(date: Date | null) => {
-                setSelectedDate(date); // explicitly specify the type here
-              }}
+              onDateSelect={handleDateSelect} //access selected date from component
+              // onDateSelect={(date: Date | null) => {
+              //   setSelectedDate(date); // explicitly specify the type here
+              // }}
             />
             <View style={styles.buttonsContainer}>
               <View style={styles.button}>
@@ -132,15 +151,24 @@ export default function AddNewBirthday() {
                       message: inputMessage,
                       date: selectedDate, // fix ..
                     };
-
                     //await storeData(birthdayData);
 
-                    // Store the birthday data in Zustand
+                    // Store the birthday data in Zustandi
+                    /*  setData([
+                      ...useBirthdayStore.getState().data,
+                      birthdayData,
+                    ]); */
+
+                    /* addNewBirthday(birthdayData); */
+
+                    // Add the new birthday to the store
                     setData([
                       ...useBirthdayStore.getState().data,
                       birthdayData,
                     ]);
+                    console.log(birthdayData);
 
+                    console.log(birthdayData);
                     router.push('/(tabs)/birthdays');
                     resetInputFields();
                   }}
