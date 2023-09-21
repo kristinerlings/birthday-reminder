@@ -5,6 +5,7 @@ import { FlashList } from '@shopify/flash-list';
 import { Text, View } from '../../../components/Themed';
 import { Stack /* useRouter */ } from 'expo-router'; //useRouter -> access router from anywhere I pushed
 import { useBirthdayStore } from '../../../store/useBirthdayStore';
+import UpcomingAge from '../../../components/UpcomingAge';
 
 export default function Birthdays() {
   /*  const router = useRouter(); */
@@ -25,7 +26,17 @@ export default function Birthdays() {
                 <Text style={styles.message}>{item.message}</Text>
               </View>
               <View style={styles.dataContainer}>
-                <Text style={styles.date}>DummyData</Text>
+                <Text style={styles.date}>
+                  {/*  {item.date?.toLocaleDateString()} */}
+                  {/* {item.date?.toLocaleDateString(undefined, {day: 'numeric', month: 'short'})} */}
+                  {item.date
+                    ? `${item.date.getDate()} ${item.date.toLocaleString(
+                        'default',
+                        { month: 'short' }
+                      )}`
+                    : ''}
+                </Text>
+                <UpcomingAge birthday={item.date} />
               </View>
             </View>
           )}
@@ -77,7 +88,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   separator: {
-   /*  marginVertical: 30, */
+    /*  marginVertical: 30, */
     height: 1,
     width: '80%',
   },
