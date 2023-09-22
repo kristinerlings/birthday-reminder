@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { View, Button, Text, StyleSheet } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useBirthdayStore } from '../store/useBirthdayStore'; //Zustand
+import Color from '../constants/Colors';
 
 interface DatePickerProps {
   onDateSelect: (date: Date | null) => void;
@@ -48,6 +49,7 @@ export default function DatePicker({ onDateSelect }: DatePickerProps) {
         <View style={styles.dateInput}>
           {/*  <Text style={styles.title}>Date of Birth</Text> */}
           <DateTimePicker
+            /* defaultValue= */
             value={selectedDate || new Date()}
             mode="date"
             display="spinner" //default, spinner, compact, inline
@@ -71,11 +73,11 @@ export default function DatePicker({ onDateSelect }: DatePickerProps) {
     </View>
   );
 }
-const colours = {
+/* const colours = {
   white: '#E4E4E4',
   yellow: '#FFD45A',
 };
-
+ */
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
@@ -83,7 +85,7 @@ const styles = StyleSheet.create({
   },
   dateInput: {},
   title: {
-    color: colours.yellow,
+    color: Color.myCustomColours.darkGrey,
     marginTop: 5,
     alignSelf: 'flex-start',
   },

@@ -1,21 +1,19 @@
-import React, { useRef, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Stack, router } from 'expo-router';
+import React, { useRef } from 'react';
 import {
-  Text,
-  View,
-  TextInput,
-  Pressable,
   Button,
+  Keyboard,
   SafeAreaView,
   StyleSheet,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Platform,
+  Text,
+  TextInput,
+  View
 } from 'react-native';
-import { Stack, router } from 'expo-router';
 import DatePicker from '../../../components/DatePicker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useBirthdayStore } from '../../../store/useBirthdayStore';
 import PlatformTouchable from '../../../components/PlatformTouchable';
+import Colors from '../../../constants/Colors';
+import { useBirthdayStore } from '../../../store/useBirthdayStore';
 
 /*SafeAreaView - automatically applies padding / view */
 //define typescript type for my object
@@ -88,8 +86,8 @@ export default function AddNewBirthday() {
       <SafeAreaView style={styles.container}>
         <PlatformTouchable onPress={handleTapOutside}>
           <View style={styles.wrapper}>
-            {/*  <Text style={{ color: colours.lightBlue }}>New Birthday</Text> */}
-            <View>
+            <Text style={styles.newTitle}>Log New Birthday</Text>
+            <View style={{ paddingTop: 10 }}>
               <Text style={styles.title}>Name</Text>
               <TextInput
                 ref={inputRef}
@@ -133,6 +131,7 @@ export default function AddNewBirthday() {
               <View style={styles.button}>
                 <Button
                   title="Cancel"
+                  color={Colors.myCustomColours.darkBlue}
                   onPress={() => {
                     router.push('/(tabs)/(index)');
                     resetInputFields();
@@ -142,11 +141,12 @@ export default function AddNewBirthday() {
               <View style={styles.button}>
                 <Button
                   title="Save"
+                  color={Colors.myCustomColours.darkBlue}
                   onPress={() => {
                     const birthdayData = {
                       name: inputName,
                       message: inputMessage,
-                      date: selectedDate, 
+                      date: selectedDate,
                     };
                     // Add the new birthday to the store
                     setData([
@@ -154,7 +154,7 @@ export default function AddNewBirthday() {
                       birthdayData,
                     ]);
                     console.log(birthdayData);
-                    
+
                     router.push('/(tabs)/birthdays');
                     resetInputFields();
                   }}
@@ -167,8 +167,8 @@ export default function AddNewBirthday() {
     </>
   );
 }
-/*   style={[styles.inputField, { color: colours.grey }]} */
-const colours = {
+/*   style={[styles.inputField, { color: Colors.myCustomColours.grey }]} */
+/* const colours = {
   white: '#E4E4E4',
   grey: '#B7B7B7',
   lightGrey: '#C0C0C0',
@@ -176,56 +176,65 @@ const colours = {
   darkBlue: '#00262C',
   darkBlueTransp: 'rgba(0, 38, 44, 0.8)',
   yellow: '#FFD45A',
-};
+}; */
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colours.darkBlue,
+    backgroundColor: Colors.myCustomColours.darkBlue,
   },
   wrapper: {
     margin: 30,
     flex: 1,
+    justifyContent: 'space-between',
   },
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    margin: 20,
+    marginVertical: 30,
   },
   button: {
     alignItems: 'center',
-    backgroundColor: '#DDDDDD',
     padding: 5,
     width: 120,
     borderRadius: 10,
+    backgroundColor: Colors.myCustomColours.lightBlue,
+    color: Colors.myCustomColours.darkBlue,
   },
   buttonSave: {
-    backgroundColor: colours.yellow,
+    backgroundColor: Colors.myCustomColours.yellow,
   },
   inputField: {
     height: 40,
-    borderColor: colours.lightBlue,
+    borderColor: Colors.myCustomColours.lightBlue,
     borderRadius: 10,
     borderWidth: 1,
     padding: 10,
     marginVertical: 12,
-    color: colours.grey,
+    color: Colors.myCustomColours.grey,
     maxWidth: '60%',
   },
   textarea: {
     height: 80,
-    borderColor: colours.lightBlue,
+    borderColor: Colors.myCustomColours.lightBlue,
     borderRadius: 10,
     borderWidth: 1,
     padding: 10,
     marginVertical: 12,
-    color: colours.grey,
+    color: Colors.myCustomColours.grey,
   },
   placeholder: {
-    color: colours.lightGrey,
+    color: Colors.myCustomColours.lightGrey,
   },
   title: {
-    color: colours.yellow,
+    color: Colors.myCustomColours.yellow,
     marginTop: 5,
   },
+  newTitle: {
+    color: Colors.myCustomColours.white,
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginVertical: 5,
+  }
 });

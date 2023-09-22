@@ -3,6 +3,7 @@ is used both to add new data item (when no data for given key exists),
 and to modify existing item (when previous data for given key exists).*/
 
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 export interface BirthdayData {
   name: string;
@@ -15,15 +16,30 @@ type BirthdayStore = {
   setData: (data: BirthdayData[]) => void;
 };
 
-//responsible for managing the birthday data
+//manage the birthday data
 export const useBirthdayStore = create<BirthdayStore>((set) => ({
+ 
   data: [], // Initialize the array as empty
   setData: (data) => set({ data }),
 
-  //Add single birthday to my data array in the store, can now use the addBirthday function to add it to the store (add)
- /*  addBirthday: (birthday: BirthdayData) => {
-    set((state) => ({
-      data: [...state.data, birthday],
-    }))
-  } */
 }));
+
+
+/* 
+const storage = createJSONStorage('zustand');
+
+//manage the birthday data
+export const useBirthdayStore = create<BirthdayStore> ({
+ persist(
+  (set) => ({
+  data: [], // Initialize the array as empty
+  setData: (data) => set({ data }),
+  } ),
+  {
+    name: 'birthday-storage', // name for my storage
+    getStorage: () => storage,
+  }
+ 
+
+}));
+ */

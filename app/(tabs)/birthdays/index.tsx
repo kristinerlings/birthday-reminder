@@ -1,18 +1,17 @@
 // https://docs.expo.dev/versions/latest/sdk/async-storage/
 //npx expo install @react-native-async-storage/async-storage
 //https://www.npmjs.com/package/react-native-swipe-list-view
-import { StyleSheet, Button, Image } from 'react-native';
-import { FlashList } from '@shopify/flash-list';
-import { Text, View } from '../../../components/Themed';
 import { Stack /* useRouter */ } from 'expo-router'; //useRouter -> access router from anywhere I pushed
-import {
-  useBirthdayStore,
-  BirthdayData,
-} from '../../../store/useBirthdayStore'; // Zustand
-import UpcomingAge from '../../../components/UpcomingAge';
 import React, { useState } from 'react';
-import { SwipeListView } from 'react-native-swipe-list-view';
-//SwipeListView = Is built on top of FlashList !
+import { Button, Image, StyleSheet } from 'react-native';
+import { SwipeListView } from 'react-native-swipe-list-view'; //SwipeListView = Is built on top of FlashList !
+import { Text, View } from '../../../components/Themed';
+import UpcomingAge from '../../../components/UpcomingAge';
+import Colors from '../../../constants/Colors';
+import {
+  BirthdayData,
+  useBirthdayStore,
+} from '../../../store/useBirthdayStore'; // Zustand
 
 export default function Birthdays() {
   /*  const router = useRouter(); */
@@ -25,9 +24,9 @@ export default function Birthdays() {
       }
       return a.date.getDate() - b.date.getDate();
     } else if (a.date) {
-      return -1; // a has a date but b doesn't
+      return -1; // a = contains date but not b
     } else if (b.date) {
-      return 1; // b has a date but a doesn't
+      return 1; //b = contains date but not a
     }
     return 0; // neither has a date
   });
@@ -83,7 +82,7 @@ export default function Birthdays() {
     december: any;
   };
 
-  const zodiacImages:MonthImagesType = {
+  const zodiacImages: MonthImagesType = {
     january: require('../../../data/january.png'),
     february: require('../../../data/february.png'),
     march: require('../../../data/march.png'),
@@ -94,53 +93,51 @@ export default function Birthdays() {
     august: require('../../../data/august.png'),
     september: require('../../../data/september.png'),
     october: require('../../../data/october.png'),
-    november: require('../../../data/november.png'),   
+    november: require('../../../data/november.png'),
     december: require('../../../data/december.png'),
   };
 
-  
-const displayListBeforeSwipe = ({ item }: { item: BirthdayData }) => {
-  const zodiacMonthName: keyof MonthImagesType | null = item.date
-    ? (item.date
-        .toLocaleString('default', { month: 'long' })
-        .toLowerCase() as keyof MonthImagesType)
-    : null;
+  const displayListBeforeSwipe = ({ item }: { item: BirthdayData }) => {
+    const zodiacMonthName: keyof MonthImagesType | null = item.date
+      ? (item.date
+          .toLocaleString('default', { month: 'long' })
+          .toLowerCase() as keyof MonthImagesType)
+      : null;
 
-  const zodiacImageToShow = zodiacMonthName
-    ? zodiacImages[zodiacMonthName]
-    : null;
+    const zodiacImageToShow = zodiacMonthName
+      ? zodiacImages[zodiacMonthName]
+      : null;
 
-  return (
-    <View style={styles.containerWrapper}>
-      <View style={styles.container}>
-        <View style={styles.dataContainer}>
-          <Text style={styles.name}>{item.name}</Text>
-          <Text style={styles.message}>{item.message}</Text>
-        </View>
-        <View style={styles.dataContainer}>
-          <View style={styles.bdayDate}>
-            {zodiacImageToShow && (
-              <Image source={zodiacImageToShow} style={styles.zodiacImage} />
-            )}
-
-            <Text style={styles.date}>
-              {item.date
-                ? `${item.date.getDate()} ${item.date.toLocaleString(
-                    'default',
-                    {
-                      month: 'short',
-                    }
-                  )}`
-                : ''}
-            </Text>
+    return (
+      <View style={styles.containerWrapper}>
+        <View style={styles.container}>
+          <View style={styles.dataContainer}>
+            <Text style={styles.name}>{item.name}</Text>
+            <Text style={styles.message}>{item.message}</Text>
           </View>
-          <UpcomingAge birthday={item.date} />
+          <View style={styles.dataContainer}>
+            <View style={styles.bdayDate}>
+              {zodiacImageToShow && (
+                <Image source={zodiacImageToShow} style={styles.zodiacImage} />
+              )}
+
+              <Text style={styles.date}>
+                {item.date
+                  ? `${item.date.getDate()} ${item.date.toLocaleString(
+                      'default',
+                      {
+                        month: 'short',
+                      }
+                    )}`
+                  : ''}
+              </Text>
+            </View>
+            <UpcomingAge birthday={item.date} />
+          </View>
         </View>
       </View>
-    </View>
-  );
-};
-
+    );
+  };
 
   //rowMap = object with keys of row data, and values of ref to row hidden component
   const displaySwipeHidden = (data: { item: BirthdayData }, rowMap: any) => (
@@ -158,7 +155,7 @@ const displayListBeforeSwipe = ({ item }: { item: BirthdayData }) => {
 
   const handleDelete = (itemToDelete: BirthdayData) => {
     const updatedData = data.filter((item) => item !== itemToDelete);
-    setData(updatedData); // Using `setData` from `useBirthdayStore` to update the store
+    setData(updatedData); //  update the store
   };
 
   return (
@@ -167,7 +164,7 @@ const displayListBeforeSwipe = ({ item }: { item: BirthdayData }) => {
       <View style={styles.pageContainer}>
         {activeButton === 'upcoming' && (
           <>
-            <Text>Upcoming Birthdays</Text>
+            <Text style={styles.titleToggle}>Upcoming Birthdays</Text>
             <SwipeListView<BirthdayData>
               data={upcomingBirthdays}
               renderItem={displayListBeforeSwipe}
@@ -183,7 +180,7 @@ const displayListBeforeSwipe = ({ item }: { item: BirthdayData }) => {
         )}
         {activeButton === 'past' && (
           <>
-            <Text>Past Birthdays</Text>
+            <Text style={styles.titleToggle}>Past Birthdays</Text>
             <SwipeListView
               data={pastBirthdays}
               renderItem={displayListBeforeSwipe}
@@ -200,34 +197,43 @@ const displayListBeforeSwipe = ({ item }: { item: BirthdayData }) => {
       </View>
       <Button
         title="Upcoming Birthdays"
-        color={activeButton === 'upcoming' ? colours.yellow : colours.lightBlue}
+        color={
+          activeButton === 'upcoming'
+            ? Colors.myCustomColours.yellow
+            : Colors.myCustomColours.lightBlue
+        }
         onPress={() => setActiveButton('upcoming')}
       />
       <Button
         title="Past Birthdays"
-        color={activeButton === 'past' ? colours.yellow : colours.lightBlue}
+        color={
+          activeButton === 'past'
+            ? Colors.myCustomColours.yellow
+            : Colors.myCustomColours.lightBlue
+        }
         onPress={() => setActiveButton('past')}
       />
     </>
   );
 }
-const colours = {
+/* const colours = {
   white: '#E4E4E4',
   grey: '#B7B7B7',
   darkGrey: '#ABABAB',
   lightBlue: '#D1E2E2',
   darkBlue: '#00262C',
   darkBlueTransp: 'rgba(0, 38, 44, 0.8)',
+  dark: '#012E33',
   yellow: '#FFD45A',
-};
+}; */
 
 const styles = StyleSheet.create({
   pageContainer: {
-    backgroundColor: colours.darkBlue,
+    backgroundColor: Colors.myCustomColours.darkBlue,
     flex: 1,
   },
   containerWrapper: {
-    backgroundColor: colours.darkBlue,
+    backgroundColor: Colors.myCustomColours.darkBlue,
     flex: 1,
   },
   container: {
@@ -236,27 +242,35 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'space-between',
     backgroundColor: 'transparent',
-    margin: 30,
+    marginHorizontal: 30,
+    marginVertical: 10,
   },
   dataContainer: {
     backgroundColor: 'transparent',
     marginVertical: 5,
   },
   name: {
-    color: colours.white,
+    color: Colors.myCustomColours.white,
     fontWeight: 'bold',
     fontSize: 18,
   },
   message: {
-    color: colours.white,
+    color: Colors.myCustomColours.white,
   },
   date: {
-    color: colours.yellow,
+    color: Colors.myCustomColours.yellow,
     textAlign: 'right',
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  titleToggle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: Colors.myCustomColours.white,
+    textAlign: 'center',
+    marginVertical: 20,
   },
   separator: {
     /*  marginVertical: 30, */
@@ -264,7 +278,7 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   pastBirthdays: {
-    color: colours.darkGrey,
+    color: Colors.myCustomColours.darkGrey,
   },
   rowBack: {
     alignItems: 'center',
@@ -275,7 +289,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent', // For demonstration purposes
   },
   editContainer: {
-    backgroundColor: colours.yellow,
+    backgroundColor: Colors.myCustomColours.yellow,
     /* marginRight: 30, */
     height: '100%',
     padding: 20,
@@ -293,13 +307,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   zodiacImage: {
-    width: 20, 
+    width: 20,
     height: 20,
     marginRight: 4,
   },
-  bdayDate:{
+  bdayDate: {
     backgroundColor: 'transparent',
     justifyContent: 'flex-end',
     flexDirection: 'row',
-  }
+  },
 });

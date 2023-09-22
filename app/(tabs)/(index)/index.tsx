@@ -2,12 +2,19 @@
 //snack.expo.dev/embedded/@aboutreact/gift-card-screen-with-react-native-confetti-cannon?iframeId=qn4os3zz2g&preview=true&platform=ios&theme=dark
 
 import { Stack, Link, router } from 'expo-router';
-import { StyleSheet, Pressable, ImageBackground, Button } from 'react-native';
+import {
+  StyleSheet,
+  Pressable,
+  ImageBackground,
+  Button,
+  Image,
+} from 'react-native';
 import { Text, View } from '../../../components/Themed';
 import { useBirthdayStore } from '../../../store/useBirthdayStore';
 import { useUpcomingBirthdays } from '../../../components/useUpcomingBirthdays'; // my custom hook
 import ConfettiCannon from 'react-native-confetti-cannon';
 import { useEffect, useState } from 'react';
+import Colors from '../../../constants/Colors';
 
 export default function TabOneScreen() {
   const { data } = useBirthdayStore();
@@ -58,7 +65,7 @@ export default function TabOneScreen() {
 
     const intervalId = setInterval(() => {
       startConfetti();
-    }, 50000);
+    }, 5000);
 
     return () => clearInterval(intervalId); // cleanup when component unmounts
   }, []);
@@ -75,8 +82,16 @@ export default function TabOneScreen() {
             {birtdayDisplayIfToday.length > 0 ? (
               <>
                 <Text style={styles.displayText}>
-                  It's {birtdayDisplayIfToday[0].name}'s birthday today!
+                  It's{' '}
+                  <Text style={[styles.titleSpan, { fontWeight: 'bold' }]}>
+                    {birtdayDisplayIfToday[0].name}'s
+                  </Text>{' '}
+                  birthday today!
                 </Text>
+                <Image
+                  source={require('../../../assets/images/cake.png')}
+                  style={styles.image}
+                />
                 {confettiExplosion ? (
                   <View style={styles.confetti}>
                     <ConfettiCannon
@@ -89,7 +104,16 @@ export default function TabOneScreen() {
                 ) : null}
               </>
             ) : (
-              <Text>Keep a track of your friends birhdays</Text>
+              <>
+                <Text style={styles.title}>
+                  Your personal{' '}
+                  <Text style={styles.titleSpan}>Birthday Log</Text>
+                </Text>
+                <Text style={styles.subtitle}>
+                  Don't want to forget your friends birthdays? Start logging
+                  now!
+                </Text>
+              </>
             )}
           </View>
         </View>
@@ -113,7 +137,7 @@ export default function TabOneScreen() {
     </>
   );
 }
-const colours = {
+/* const colours = {
   white: '#E4E4E4',
   grey: '#B7B7B7',
   lightBlue: '#D1E2E2',
@@ -121,12 +145,13 @@ const colours = {
   darkBlueTransp: 'rgba(0, 38, 44, 0.8)',
   dark: '#012E33',
   yellow: '#FFD45A',
-};
+}; */
+//
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colours.darkBlue,
+    backgroundColor: Colors.myCustomColours.darkBlue,
     justifyContent: 'space-between',
   },
   displayContainer: {
@@ -137,28 +162,48 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   displayContent: {
-    paddingVertical: 150,
+    paddingVertical: 100,
     paddingHorizontal: 40,
     marginHorizontal: 30,
     borderRadius: 40,
-    backgroundColor: colours.dark,
+    backgroundColor: Colors.myCustomColours.dark,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: Colors.myCustomColours.white,
+    textAlign: 'center',
+  },
+  titleSpan: {
+    color: Colors.myCustomColours.yellow,
+    fontSize: 35,
+    textAling: 'center',
+  },
+  subtitle: {
+    fontSize: 15,
+    color: Colors.myCustomColours.white,
+    textAlign: 'center',
+    paddingTop: 10,
+    lineHeight: 20,
   },
   button: {
     paddingVertical: 15,
-    backgroundColor: colours.lightBlue,
+    backgroundColor: Colors.myCustomColours.lightBlue,
     borderRadius: 10,
     width: '100%',
     alignItems: 'center',
     marginVertical: 10,
   },
   statusContainer: {
-    backgroundColor: colours.darkBlueTransp,
+    backgroundColor: Colors.myCustomColours.darkBlueTransp,
     padding: 10,
-    paddingBottom: 60,
+    paddingBottom: 40,
   },
   statusTitle: {
     alignSelf: 'center',
-    color: colours.grey,
+    color: Colors.myCustomColours.grey,
     fontWeight: 'bold',
     paddingVertical: 10,
   },
@@ -166,12 +211,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     backgroundColor: 'transparent',
+    marginHorizontal: 15,
+    marginVertical: 2,
   },
   name: {
-    color: colours.grey,
+    color: Colors.myCustomColours.grey,
   },
   date: {
-    color: colours.yellow,
+    color: Colors.myCustomColours.yellow,
     fontWeight: '600',
   },
   confetti: {
@@ -184,7 +231,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   displayText: {
+    fontSize: 35,
     textAlign: 'center',
     backgroundColor: 'transparent',
+  },
+  image: {
+    width: 100,
+    height: 100,
+    marginTop: 30,
+    
   },
 });
