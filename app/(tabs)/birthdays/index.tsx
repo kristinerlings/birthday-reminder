@@ -1,7 +1,7 @@
 // https://docs.expo.dev/versions/latest/sdk/async-storage/
 //npx expo install @react-native-async-storage/async-storage
 //https://www.npmjs.com/package/react-native-swipe-list-view
-import { StyleSheet, Button } from 'react-native';
+import { StyleSheet, Button, Image } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { Text, View } from '../../../components/Themed';
 import { Stack /* useRouter */ } from 'expo-router'; //useRouter -> access router from anywhere I pushed
@@ -68,7 +68,49 @@ export default function Birthdays() {
     }
   };
 
-  const displayListBeforeSwipe = ({ item }: { item: BirthdayData }) => (
+  type MonthImagesType = {
+    january: any;
+    february: any;
+    march: any;
+    april: any;
+    may: any;
+    june: any;
+    july: any;
+    august: any;
+    september: any;
+    october: any;
+    november: any;
+    december: any;
+  };
+
+  const zodiacImages:MonthImagesType = {
+    january: require('../../../data/january.png'),
+    february: require('../../../data/february.png'),
+    march: require('../../../data/march.png'),
+    april: require('../../../data/april.png'),
+    may: require('../../../data/may.png'),
+    june: require('../../../data/june.png'),
+    july: require('../../../data/july.png'),
+    august: require('../../../data/august.png'),
+    september: require('../../../data/september.png'),
+    october: require('../../../data/october.png'),
+    november: require('../../../data/november.png'),   
+    december: require('../../../data/december.png'),
+  };
+
+  
+const displayListBeforeSwipe = ({ item }: { item: BirthdayData }) => {
+  const zodiacMonthName: keyof MonthImagesType | null = item.date
+    ? (item.date
+        .toLocaleString('default', { month: 'long' })
+        .toLowerCase() as keyof MonthImagesType)
+    : null;
+
+  const zodiacImageToShow = zodiacMonthName
+    ? zodiacImages[zodiacMonthName]
+    : null;
+
+  return (
     <View style={styles.containerWrapper}>
       <View style={styles.container}>
         <View style={styles.dataContainer}>
@@ -76,18 +118,29 @@ export default function Birthdays() {
           <Text style={styles.message}>{item.message}</Text>
         </View>
         <View style={styles.dataContainer}>
-          <Text style={styles.date}>
-            {item.date
-              ? `${item.date.getDate()} ${item.date.toLocaleString('default', {
-                  month: 'short',
-                })}`
-              : ''}
-          </Text>
+          <View style={styles.bdayDate}>
+            {zodiacImageToShow && (
+              <Image source={zodiacImageToShow} style={styles.zodiacImage} />
+            )}
+
+            <Text style={styles.date}>
+              {item.date
+                ? `${item.date.getDate()} ${item.date.toLocaleString(
+                    'default',
+                    {
+                      month: 'short',
+                    }
+                  )}`
+                : ''}
+            </Text>
+          </View>
           <UpcomingAge birthday={item.date} />
         </View>
       </View>
     </View>
   );
+};
+
 
   //rowMap = object with keys of row data, and values of ref to row hidden component
   const displaySwipeHidden = (data: { item: BirthdayData }, rowMap: any) => (
@@ -107,8 +160,6 @@ export default function Birthdays() {
     const updatedData = data.filter((item) => item !== itemToDelete);
     setData(updatedData); // Using `setData` from `useBirthdayStore` to update the store
   };
-
-  
 
   return (
     <>
@@ -241,4 +292,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  zodiacImage: {
+    width: 20, 
+    height: 20,
+    marginRight: 4,
+  },
+  bdayDate:{
+    backgroundColor: 'transparent',
+    justifyContent: 'flex-end',
+    flexDirection: 'row',
+  }
 });
