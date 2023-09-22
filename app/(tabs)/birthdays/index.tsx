@@ -1,10 +1,9 @@
-// https://docs.expo.dev/versions/latest/sdk/async-storage/
-//npx expo install @react-native-async-storage/async-storage
 //https://www.npmjs.com/package/react-native-swipe-list-view
-import { Stack /* useRouter */ } from 'expo-router'; //useRouter -> access router from anywhere I pushed
+//https://github.com/leecade/react-native-swiper
+import { Stack } from 'expo-router'; 
 import React, { useState } from 'react';
-import { Button, Image, StyleSheet } from 'react-native';
-import { SwipeListView } from 'react-native-swipe-list-view'; //SwipeListView = Is built on top of FlashList !
+import { Button, Image, StyleSheet, AppRegistry } from 'react-native'; //AppRegistry => tells which component should be the starting point/root
+import { SwipeListView } from 'react-native-swipe-list-view'; //SwipeListView => Is built on top of FlashList !
 import { Text, View } from '../../../components/Themed';
 import UpcomingAge from '../../../components/UpcomingAge';
 import Colors from '../../../constants/Colors';
@@ -12,6 +11,7 @@ import {
   BirthdayData,
   useBirthdayStore,
 } from '../../../store/useBirthdayStore'; // Zustand
+import Swiper from 'react-native-swiper'; //swipe data/screens
 
 export default function Birthdays() {
   /*  const router = useRouter(); */
@@ -51,21 +51,8 @@ export default function Birthdays() {
   const [activeButton, setActiveButton] = useState('upcoming');
 
   //swipe list view
-  /*    const swipeHidden = (data, rowMap) => (
-    <View style={styles.rowBack}>
-      <Text>Delete</Text>
-    </View>
-  ); */
-
-  //swipe list view starts here
   const [lastOpenedRowKey, setLastOpenedRowKey] = useState<string | null>(null);
 
-  const closeLastOpenedRow = (rowMap: any) => {
-    if (lastOpenedRowKey && rowMap && rowMap[lastOpenedRowKey]) {
-      rowMap[lastOpenedRowKey].closeRow();
-      setLastOpenedRowKey(null);
-    }
-  };
 
   type MonthImagesType = {
     january: any;
@@ -141,16 +128,11 @@ export default function Birthdays() {
 
   //rowMap = object with keys of row data, and values of ref to row hidden component
   const displaySwipeHidden = (data: { item: BirthdayData }, rowMap: any) => (
-    /*  <View> */
     <View style={styles.rowBack}>
-      <View style={styles.editContainer}>
-        <Text style={styles.edit}>Edit</Text>
-      </View>
       <View style={styles.deleteContainer}>
         <Text onPress={() => handleDelete(data.item)}>Delete</Text>
       </View>
     </View>
-    /* </View> */
   );
 
   const handleDelete = (itemToDelete: BirthdayData) => {
@@ -169,12 +151,7 @@ export default function Birthdays() {
               data={upcomingBirthdays}
               renderItem={displayListBeforeSwipe}
               renderHiddenItem={displaySwipeHidden}
-              // leftOpenValue={75}
-              rightOpenValue={-150}
-              /*  onRowDidOpen={(rowKey, rowMap) => {
-                closeLastOpenedRow(rowMap);
-                setLastOpenedRowKey(rowKey);
-              }} */
+              rightOpenValue={-80}
             />
           </>
         )}
@@ -185,12 +162,7 @@ export default function Birthdays() {
               data={pastBirthdays}
               renderItem={displayListBeforeSwipe}
               renderHiddenItem={displaySwipeHidden}
-              //leftOpenValue={75}
-              rightOpenValue={-150}
-              /*  onRowDidOpen={(rowKey, rowMap) => {
-                closeLastOpenedRow(rowMap);
-                setLastOpenedRowKey(rowKey);
-              }} */
+              rightOpenValue={-80}
             />
           </>
         )}
@@ -216,16 +188,7 @@ export default function Birthdays() {
     </>
   );
 }
-/* const colours = {
-  white: '#E4E4E4',
-  grey: '#B7B7B7',
-  darkGrey: '#ABABAB',
-  lightBlue: '#D1E2E2',
-  darkBlue: '#00262C',
-  darkBlueTransp: 'rgba(0, 38, 44, 0.8)',
-  dark: '#012E33',
-  yellow: '#FFD45A',
-}; */
+
 
 const styles = StyleSheet.create({
   pageContainer: {
@@ -286,7 +249,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     paddingRight: 0,
-    backgroundColor: 'transparent', // For demonstration purposes
+    backgroundColor: 'transparent',
   },
   editContainer: {
     backgroundColor: Colors.myCustomColours.yellow,
@@ -315,5 +278,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     justifyContent: 'flex-end',
     flexDirection: 'row',
+  },
+  wrapper: {},//swiper wrapper
+  slide1: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#9DD6EB',
+  },
+  slide2: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#97CAE5',
   },
 });

@@ -11,11 +11,11 @@ export function useUpcomingBirthdays() {
       }
       return a.date.getDate() - b.date.getDate();
     } else if (a.date) {
-      return -1; // a has a date but b doesn't
+      return -1; 
     } else if (b.date) {
-      return 1; // b has a date but a doesn't
+      return 1; 
     }
-    return 0; // neither has a date
+    return 0; 
   });
 
   const today = new Date();
