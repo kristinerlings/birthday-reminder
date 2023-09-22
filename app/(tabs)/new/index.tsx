@@ -8,7 +8,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  View
+  View,
 } from 'react-native';
 import DatePicker from '../../../components/DatePicker';
 import PlatformTouchable from '../../../components/PlatformTouchable';
@@ -62,10 +62,10 @@ export default function AddNewBirthday() {
     }
   }; */
 
-  const storeData = async (value: birthdayData) => {
+  const storeData = async (key: string, value: birthdayData) => {
     try {
       const jsonValue = JSON.stringify(value);
-      await AsyncStorage.setItem('my-key', jsonValue);
+      await AsyncStorage.setItem(key, jsonValue);
     } catch (e) {
       // saving error
     }
@@ -78,6 +78,11 @@ export default function AddNewBirthday() {
     } catch (e) {
       // error reading value
     }
+  };
+
+  const generateUniqueKey = (name: string, date: Date | null) => {
+    if (!date) return name;
+    return `${name}-${date.getMonth()}-${date.getDate()}`;
   };
 
   return (
@@ -143,11 +148,17 @@ export default function AddNewBirthday() {
                   title="Save"
                   color={Colors.myCustomColours.darkBlue}
                   onPress={() => {
+                    const key = generateUniqueKey(inputName, selectedDate);
                     const birthdayData = {
+                      key: key,
                       name: inputName,
                       message: inputMessage,
                       date: selectedDate,
                     };
+                    // Generate the key based on the inputName and selectedDate
+                   
+                   /*  storeData(key, birthdayData); */
+
                     // Add the new birthday to the store
                     setData([
                       ...useBirthdayStore.getState().data,
@@ -236,5 +247,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginVertical: 5,
-  }
+  },
 });

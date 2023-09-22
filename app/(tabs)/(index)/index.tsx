@@ -119,8 +119,8 @@ export default function TabOneScreen() {
         </View>
         <View style={styles.statusContainer}>
           <Text style={styles.statusTitle}>Upcoming Birthdays</Text>
-          {displayNextTwoBirthdays.map((birthday, index) => (
-            <View style={styles.birthdayStatus}>
+          {displayNextTwoBirthdays.map((birthday, index /*Add unique key using index */) => (
+            <View key={index} style={styles.birthdayStatus}>
               <Text style={styles.name}>{birthday.name}</Text>
               <Text style={styles.date}>
                 {birthday.date

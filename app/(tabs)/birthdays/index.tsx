@@ -1,6 +1,6 @@
 //https://www.npmjs.com/package/react-native-swipe-list-view
 //https://github.com/leecade/react-native-swiper
-import { Stack } from 'expo-router'; 
+import { Stack } from 'expo-router';
 import React, { useState } from 'react';
 import { Button, Image, StyleSheet, AppRegistry } from 'react-native'; //AppRegistry => tells which component should be the starting point/root
 import { SwipeListView } from 'react-native-swipe-list-view'; //SwipeListView => Is built on top of FlashList !
@@ -13,9 +13,22 @@ import {
 } from '../../../store/useBirthdayStore'; // Zustand
 import Swiper from 'react-native-swiper'; //swipe data/screens
 
+type RowMapEntry = {
+    closeRow: () => void;
+    isOpen: () => boolean;
+    manuallySwipeRow: (toValue: number) => void;
+  };
+
+  
+
+
 export default function Birthdays() {
   /*  const router = useRouter(); */
   const { data, setData } = useBirthdayStore(); // Access data from zustand store
+  //swipe list view
+  const [lastOpenedRowKey, setLastOpenedRowKey] = useState<string | null>(null);
+  /* const rowMapRef = React.useRef({});//ref to row hidden component */
+const rowMapRef = React.useRef<Record<string, RowMapEntry>>({});
 
   const sortedData = [...data].sort((a, b) => {
     if (a.date && b.date) {
@@ -48,10 +61,8 @@ export default function Birthdays() {
           birthday.date.getDate() > today.getDate()))
   );
 
-  const [activeButton, setActiveButton] = useState('upcoming');
+  /*  const [activeButton, setActiveButton] = useState('upcoming'); */
 
-  //swipe list view
-  const [lastOpenedRowKey, setLastOpenedRowKey] = useState<string | null>(null);
 
 
   type MonthImagesType = {
@@ -96,7 +107,7 @@ export default function Birthdays() {
       : null;
 
     return (
-      <View style={styles.containerWrapper}>
+      <View style={styles.containerWrapper} onTouchEnd={() => toggleRow(item.key)}>
         <View style={styles.container}>
           <View style={styles.dataContainer}>
             <Text style={styles.name}>{item.name}</Text>
@@ -127,25 +138,54 @@ export default function Birthdays() {
   };
 
   //rowMap = object with keys of row data, and values of ref to row hidden component
-  const displaySwipeHidden = (data: { item: BirthdayData }, rowMap: any) => (
-    <View style={styles.rowBack}>
-      <View style={styles.deleteContainer}>
-        <Text onPress={() => handleDelete(data.item)}>Delete</Text>
+  const displaySwipeHidden = (data: { item: BirthdayData }, rowMap: any) => {
+    rowMapRef.current = rowMap; // store rowMap
+    return (
+      <View style={styles.rowBack}>
+        <View style={styles.deleteContainer}>
+          <Text onPress={() => handleDelete(data.item)}>Delete</Text>
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   const handleDelete = (itemToDelete: BirthdayData) => {
     const updatedData = data.filter((item) => item !== itemToDelete);
     setData(updatedData); //  update the store
   };
 
+ 
+const toggleRow = (rowKey: string) => {
+  if (rowMapRef.current[rowKey]) {
+    if (lastOpenedRowKey && lastOpenedRowKey !== rowKey) {
+      rowMapRef.current[lastOpenedRowKey]?.closeRow();
+    }
+
+    if (
+      typeof rowMapRef.current[rowKey].isOpen === 'function' &&
+      rowMapRef.current[rowKey].isOpen()
+    ) {
+      rowMapRef.current[rowKey].closeRow();
+      setLastOpenedRowKey(null);
+    } else {
+      rowMapRef.current[rowKey].manuallySwipeRow(-80);
+      setLastOpenedRowKey(rowKey);
+    }
+  }
+};
+
+
   return (
     <>
       <Stack.Screen options={{ title: 'Birthdays' }} />
       <View style={styles.pageContainer}>
-        {activeButton === 'upcoming' && (
-          <>
+        <Swiper
+          showsButtons={true}
+          loop={false}
+          style={styles.wrapper}
+          activeDotColor={Colors.myCustomColours.yellow}
+        >
+          <View style={styles.slide1}>
             <Text style={styles.titleToggle}>Upcoming Birthdays</Text>
             <SwipeListView<BirthdayData>
               data={upcomingBirthdays}
@@ -153,10 +193,8 @@ export default function Birthdays() {
               renderHiddenItem={displaySwipeHidden}
               rightOpenValue={-80}
             />
-          </>
-        )}
-        {activeButton === 'past' && (
-          <>
+          </View>
+          <View style={styles.slide2}>
             <Text style={styles.titleToggle}>Past Birthdays</Text>
             <SwipeListView
               data={pastBirthdays}
@@ -164,10 +202,10 @@ export default function Birthdays() {
               renderHiddenItem={displaySwipeHidden}
               rightOpenValue={-80}
             />
-          </>
-        )}
+          </View>
+        </Swiper>
       </View>
-      <Button
+      {/*    <Button
         title="Upcoming Birthdays"
         color={
           activeButton === 'upcoming'
@@ -184,11 +222,10 @@ export default function Birthdays() {
             : Colors.myCustomColours.lightBlue
         }
         onPress={() => setActiveButton('past')}
-      />
+      /> */}
     </>
   );
 }
-
 
 const styles = StyleSheet.create({
   pageContainer: {
@@ -279,17 +316,17 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     flexDirection: 'row',
   },
-  wrapper: {},//swiper wrapper
+  wrapper: {}, //swiper wrapper
   slide1: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#9DD6EB',
+    /*   justifyContent: 'center',
+    alignItems: 'center', */
+    backgroundColor: Colors.myCustomColours.darkBlue,
   },
   slide2: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#97CAE5',
+    /* justifyContent: 'center',
+    alignItems: 'center', */
+    backgroundColor: Colors.myCustomColours.darkBlue,
   },
 });

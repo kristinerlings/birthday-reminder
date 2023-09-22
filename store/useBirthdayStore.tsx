@@ -6,6 +6,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 export interface BirthdayData {
+  key: string;
   name: string;
   message: string;
   date: Date | null;
