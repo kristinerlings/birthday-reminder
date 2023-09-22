@@ -141,7 +141,7 @@ const rowMapRef = React.useRef<Record<string, RowMapEntry>>({});
   const displaySwipeHidden = (data: { item: BirthdayData }, rowMap: any) => {
     rowMapRef.current = rowMap; // store rowMap
     return (
-      <View style={styles.rowBack}>
+      <View style={styles.rowBack} onTouchEnd={()=> toggleRow(data.item.key)}>
         <View style={styles.deleteContainer}>
           <Text onPress={() => handleDelete(data.item)}>Delete</Text>
         </View>
@@ -154,13 +154,12 @@ const rowMapRef = React.useRef<Record<string, RowMapEntry>>({});
     setData(updatedData); //  update the store
   };
 
- 
+ //toggleRow = open/close row instead of rely only on swipe 
 const toggleRow = (rowKey: string) => {
   if (rowMapRef.current[rowKey]) {
     if (lastOpenedRowKey && lastOpenedRowKey !== rowKey) {
       rowMapRef.current[lastOpenedRowKey]?.closeRow();
     }
-
     if (
       typeof rowMapRef.current[rowKey].isOpen === 'function' &&
       rowMapRef.current[rowKey].isOpen()
@@ -173,14 +172,31 @@ const toggleRow = (rowKey: string) => {
     }
   }
 };
-
+console.log(toggleRow);
 
   return (
     <>
       <Stack.Screen options={{ title: 'Birthdays' }} />
       <View style={styles.pageContainer}>
         <Swiper
-          showsButtons={true}
+        /*   showsButtons={true}
+          nextButton={
+            <Text
+              style={{ color: Colors.myCustomColours.lightGrey, fontSize: 16, paddingBottom: 13 }}
+            >
+              -›
+            </Text>
+          }
+          prevButton={
+            <Text
+              style={{ color: Colors.myCustomColours.darkGrey, fontSize: 16, paddingBottom: 13 }}
+            >
+              ‹- 
+            </Text>
+          }
+          buttonWrapperStyle={{
+            alignItems: 'flex-end',
+          }} */
           loop={false}
           style={styles.wrapper}
           activeDotColor={Colors.myCustomColours.yellow}
@@ -319,14 +335,10 @@ const styles = StyleSheet.create({
   wrapper: {}, //swiper wrapper
   slide1: {
     flex: 1,
-    /*   justifyContent: 'center',
-    alignItems: 'center', */
     backgroundColor: Colors.myCustomColours.darkBlue,
   },
   slide2: {
     flex: 1,
-    /* justifyContent: 'center',
-    alignItems: 'center', */
     backgroundColor: Colors.myCustomColours.darkBlue,
   },
 });
